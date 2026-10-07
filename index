@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ff4f9a">
+<title>รู้ใจแค่ไหน? 💖 Bestie Quiz</title>
+<style>
+:root{
+  --bg1:#fff4fa; --bg2:#eef9ff; --card:#ffffffd9; --ink:#252333;
+  --muted:#777386; --pink:#ff4f9a; --pink2:#ff83b8; --blue:#5ab8ff;
+  --purple:#8d70ff; --line:#eee8f2; --ok:#27b676; --bad:#ff5d66;
+  --shadow:0 18px 50px rgba(62,40,86,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:ui-rounded,"Noto Sans Thai","Segoe UI",Tahoma,sans-serif;color:var(--ink);
+  background:
+    radial-gradient(circle at 8% 4%,#ffd3e8 0 9%,transparent 25%),
+    radial-gradient(circle at 92% 5%,#ccecff 0 10%,transparent 26%),
+    linear-gradient(135deg,var(--bg1),var(--bg2));
+  min-height:100vh;
+}
+button,input,textarea{font:inherit}
+.wrap{max-width:1100px;margin:auto;padding:28px 18px 70px}
+.hero{text-align:center;padding:26px 8px 18px}
+.logo{font-size:52px;filter:drop-shadow(0 10px 18px #ff8ab744)}
+h1{font-size:clamp(34px,7vw,64px);margin:0;line-height:1.05}
+.grad{background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));-webkit-background-clip:text;color:transparent}
+.sub{color:var(--muted);font-size:17px;max-width:720px;margin:12px auto 0}
+.badge{display:inline-flex;gap:8px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 13px;margin-bottom:12px;box-shadow:0 7px 25px #874a7d10}
+.card{background:var(--card);backdrop-filter:blur(12px);border:1px solid #fff;box-shadow:var(--shadow);border-radius:26px;padding:24px;margin:18px 0}
+.card h2{margin:0 0 8px;font-size:24px}
+.muted{color:var(--muted)}
+.field{display:grid;gap:8px;margin:14px 0}
+label{font-weight:800}
+input[type=text],textarea{
+  width:100%;border:1.5px solid var(--line);outline:none;border-radius:16px;padding:14px 15px;background:#fff;color:var(--ink)
+}
+input[type=text]:focus,textarea:focus{border-color:#ff8cbc;box-shadow:0 0 0 4px #ff4f9a12}
+.q{padding:22px 0;border-top:1px dashed #e8dfea}
+.q:first-child{border-top:0;padding-top:6px}
+.qtitle{font-weight:900;font-size:20px;margin-bottom:13px;display:flex;gap:10px;align-items:center}
+.qno{width:34px;height:34px;border-radius:12px;background:linear-gradient(135deg,#ffe0ee,#e7f6ff);display:grid;place-items:center;font-size:14px;flex:none}
+.options{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:11px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt label{
+  min-height:92px;cursor:pointer;border:1.5px solid var(--line);background:#fff;border-radius:18px;padding:12px;
+  display:flex;align-items:center;justify-content:center;gap:8px;flex-direction:column;text-align:center;
+  transition:.18s transform,.18s border,.18s box-shadow,.18s background;
+}
+.opt label:hover{transform:translateY(-2px);box-shadow:0 9px 24px #573b6d13}
+.opt input:checked+label{border:2px solid var(--pink);background:#fff4f9;box-shadow:0 7px 25px #ff4f9a22}
+.icon{font-size:31px;line-height:1}
+.swatch{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px #ddd}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{
+  border:0;border-radius:15px;padding:13px 18px;font-weight:900;cursor:pointer;transition:.18s transform,.18s box-shadow;display:inline-flex;align-items:center;justify-content:center;gap:8px
+}
+.btn:hover{transform:translateY(-2px)}
+.primary{background:linear-gradient(90deg,var(--pink),#ff6c82);color:#fff;box-shadow:0 10px 25px #ff4f9a38}
+.secondary{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.blue{background:linear-gradient(90deg,#4aaef8,#7b8cff);color:#fff}
+.danger{background:#fff0f2;color:#d83a50;border:1px solid #ffd6dd}
+.sharebox{display:none;margin-top:18px;padding:16px;border-radius:18px;background:#f9f5ff;border:1px solid #e9ddff}
+.shareline{display:flex;gap:9px;align-items:center}.shareline input{flex:1}
+.note{font-size:13px;color:var(--muted);margin-top:10px}
+.custom-item{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0}
+.toprow{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.progress{height:10px;background:#eee7f1;border-radius:99px;overflow:hidden;margin:10px 0 20px}.bar{height:100%;background:linear-gradient(90deg,var(--pink),var(--purple),var(--blue));width:0;transition:.3s}
+.friend-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.scoreCircle{
+  width:178px;height:178px;border-radius:50%;margin:18px auto;display:grid;place-items:center;text-align:center;
+  background:conic-gradient(var(--pink) var(--p,0%),#f2eaf3 0);position:relative;
+}
+.scoreCircle:before{content:"";position:absolute;inset:13px;border-radius:50%;background:white}
+.scoreCircle>div{position:relative;z-index:2}.scoreCircle strong{font-size:42px;display:block}
+.answerrow{padding:13px 0;border-top:1px dashed #ece4ef}.correct{color:var(--ok);font-weight:900}.wrong{color:var(--bad);font-weight:900}
+.hidden{display:none!important}
+.pill{display:inline-block;border-radius:999px;padding:6px 10px;background:#fff0f6;color:#d4357d;font-weight:800;font-size:13px}
+.footer{text-align:center;color:#8c8794;font-size:13px;margin-top:30px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(40px);opacity:0;background:#252333;color:#fff;padding:11px 16px;border-radius:999px;transition:.25s;z-index:99}
+.toast.show{opacity:1;transform:translateX(-50%)}
+.spark{position:fixed;top:-20px;pointer-events:none;animation:fall 1.8s linear forwards;z-index:100;font-size:24px}
+@keyframes fall{to{transform:translateY(110vh) rotate(600deg);opacity:.2}}
+@media(max-width:640px){
+  .card{padding:17px;border-radius:22px}.options{grid-template-columns:repeat(2,1fr)}
+  .shareline{flex-direction:column}.shareline input,.shareline button{width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="badge">💌 เกมถามเพื่อนสนิท • Bestie Test</div>
+    <div class="logo">🫶</div>
+    <h1>รู้ใจเราแค่ไหน <span class="grad">ลองดิ๊!</span></h1>
+    <p class="sub">ตั้งคำตอบของเรา → สร้างลิงก์ → ส่งให้เพื่อนตอบ → ดูคะแนนว่าใครคือเพื่อนรู้ใจตัวจริง 💖</p>
+  </section>
+
+  <main id="creator">
+    <section class="card">
+      <h2>👤 ตั้งค่าแบบทดสอบของเรา</h2>
+      <p class="muted">เลือกคำตอบที่ตรงกับเรามากที่สุด ทุกข้อที่เลือกจะเป็น “เฉลย” ให้เพื่อนมาทาย</p>
+      <div class="field">
+        <label for="ownerName">ชื่อ / ชื่อเล่นของเรา</label>
+        <input id="ownerName" type="text" maxlength="40" placeholder="เช่น มายด์, พีช, บอส...">
+      </div>
+    </section>
+
+    <section class="card">
+      <div id="creatorQuestions"></div>
+    </section>
+
+    <section class="card">
+      <h2>➕ เพิ่มคำถามของตัวเอง</h2>
+      <p class="muted">อยากใส่มุกวงในก็ได้ เช่น “เราแพ้อะไรมากที่สุด?” หรือ “เวลาเศร้าเราชอบทำอะไร?”</p>
+      <div class="field"><label>คำถาม</label><input id="customTitle" type="text" placeholder="เช่น เราชอบไปเที่ยวที่ไหนที่สุด?"></div>
+      <div class="field"><label>ตัวเลือก (คั่นด้วยเครื่องหมาย | )</label><textarea id="customChoices" rows="3" placeholder="ทะเล 🌊 | ภูเขา ⛰️ | คาเฟ่ ☕ | อยู่บ้าน 🛋️"></textarea></div>
+      <button class="btn secondary" id="addCustom">＋ เพิ่มคำถาม</button>
+      <div id="customList"></div>
+    </section>
+
+    <section class="card">
+      <h2>🚀 พร้อมแล้ว สร้างแบบทดสอบเลย</h2>
+      <p class="muted">เว็บจะเก็บการตั้งค่าไว้ในเครื่องนี้ และสร้างข้อมูลแบบทดสอบไว้ท้ายลิงก์โดยไม่ต้องมีฐานข้อมูล</p>
+      <div class="actions">
+        <button class="btn primary" id="makeLink">🔗 สร้างลิงก์ให้เพื่อน</button>
+        <button class="btn secondary" id="saveDraft">💾 บันทึกฉบับร่าง</button>
+        <button class="btn danger" id="resetAll">🗑️ ล้างทั้งหมด</button>
+      </div>
+      <div class="sharebox" id="shareBox">
+        <div class="shareline">
+          <input id="shareUrl" readonly>
+          <button class="btn blue" id="copyLink">📋 คัดลอกลิงก์</button>
+          <button class="btn primary" id="nativeShare">📨 แชร์</button>
+        </div>
+        <div class="note">หมายเหตุ: ถ้าเปิดไฟล์นี้จากคอมแบบ <b>file://</b> ให้เอาไฟล์ HTML ไปอัปโหลดบน GitHub Pages / Netlify / เว็บโฮสต์ก่อน แล้วลิงก์นี้จึงจะส่งให้เพื่อนได้จากทุกเครื่อง</div>
+      </div>
+    </section>
+  </main>
+
+  <main id="friend" class="hidden">
+    <section class="card">
+      <div class="friend-head">
+        <div>
+          <span class="pill">💖 Bestie Challenge</span>
+          <h2 id="friendTitle" style="margin-top:10px">มาทายใจกัน!</h2>
+          <p class="muted" id="friendDesc"></p>
+        </div>
+        <div style="font-size:54px">🤝</div>
+      </div>
+      <div class="field">
+        <label for="playerName">ชื่อ / ชื่อเล่นของคุณ</label>
+        <input id="playerName" type="text" maxlength="40" placeholder="ใส่ชื่อก่อนเริ่มตอบ">
+      </div>
+      <div class="progress"><div class="bar" id="quizBar"></div></div>
+    </section>
+    <section class="card"><div id="friendQuestions"></div></section>
+    <section class="card">
+      <button class="btn primary" id="submitQuiz" style="width:100%;font-size:18px">✨ ส่งคำตอบ ดูคะแนน!</button>
+    </section>
+  </main>
+
+  <main id="result" class="hidden">
+    <section class="card" style="text-align:center">
+      <div class="logo" id="resultEmoji">🎉</div>
+      <h2 id="resultTitle">ผลคะแนน</h2>
+      <div class="scoreCircle" id="scoreCircle"><div><strong id="scorePct">0%</strong><span id="scoreRaw">0/0</span></div></div>
+      <h2 class="grad" id="levelText"></h2>
+      <p class="muted" id="resultText"></p>
+      <div class="actions" style="justify-content:center">
+        <button class="btn primary" id="shareResult">📨 แชร์ผลกลับให้เพื่อน</button>
+        <button class="btn secondary" id="retryQuiz">🔁 ลองใหม่</button>
+      </div>
+    </section>
+    <section class="card">
+      <h2>🧠 เฉลยแต่ละข้อ</h2>
+      <div id="answerReview"></div>
+    </section>
+  </main>
+
+  <div class="footer">Made for besties 💗 • ไฟล์เดียว เปิดได้ทั้งมือถือและคอม</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const QUESTIONS = [
+  {id:"color", title:"เราชอบสีอะไรที่สุด?", icon:"🎨", type:"color", choices:[
+    ["ชมพู","🌸","#ff79ad"],["ฟ้า","☁️","#70c9ff"],["เทอร์ควอยซ์","🩵","#36c9c6"],["ดำ","🖤","#222222"],
+    ["แดง","❤️","#ef4455"],["ขาว","🤍","#ffffff"],["น้ำตาล","🤎","#9b6c4b"],["เทา","🩶","#9ca3af"],
+    ["น้ำเงิน","💙","#2467d8"],["เขียว","💚","#3ebc6b"],["เหลือง","💛","#ffd84a"],["ส้ม","🧡","#ff9847"],
+    ["ม่วง","💜","#925ce6"],["คราม","🔵","#4b3baf"]
+  ]},
+  {id:"food", title:"เราชอบกินอะไร?", icon:"🍽️", choices:[
+    ["ข้าวกะเพรา","🍳"],["ก๋วยเตี๋ยว","🍜"],["ราดหน้า","🥢"],["คะน้าหมูกรอบ","🥬"],
+    ["อาหารอิตาลี","🍝"],["อาหารไทย","🇹🇭"],["อาหารยุโรป","🍴"],["เมนูหมูกรอบ","🥓"],
+    ["อาหารใต้","🌶️"],["อาหารอีสาน","🥗"],["ชาบู","🍲"],["ปิ้งย่าง","🥩"],["ซูชิ","🍣"],["ของทอด","🍗"]
+  ]},
+  {id:"drink", title:"เราชอบดื่มอะไร?", icon:"🥤", choices:[
+    ["ชานมไข่มุก","🧋"],["ชาเย็น","🧡"],["ชาเขียว","🍵"],["นมชมพู","🥛"],["กาแฟ","☕"],
+    ["แดงมะนาวโซดา","🍹"],["ลาเต้","🥛"],["โกโก้","🍫"],["น้ำเปล่า","💧"],["น้ำผลไม้","🧃"]
+  ]},
+  {id:"weather", title:"เราชอบอากาศแบบไหน?", icon:"🌤️", choices:[
+    ["หนาว","❄️"],["ร้อน","☀️"],["ฝนตก","🌧️"],["ลมเย็น","🍃"],["ครึ้มๆ","☁️"]
+  ]},
+  {id:"cartoon", title:"เราชอบตัวการ์ตูน / อนิเมะอะไร?", icon:"📺", choices:[
+    ["เจ้าหญิงดิสนีย์","👑"],["โดราเอม่อน","🔔"],["Pokémon","⚡"],["Hello Kitty","🎀"],["Stitch","💙"],
+    ["ชินจัง","🖍️"],["โคนัน","🔎"],["One Piece","🏴‍☠️"],["Naruto","🍥"],["Demon Slayer","⚔️"],
+    ["Jujutsu Kaisen","👊"],["Spy x Family","🥜"],["Totoro","🌳"],["อนิเมะอื่นๆ","✨"]
+  ]},
+  {id:"badhabit", title:"นิสัยเสียของเราคืออะไร?", icon:"😵‍💫", choices:[
+    ["คิดเยอะ","🧠"],["ขี้ลืม","🙈"],["งอนง่าย","😤"],["ใจร้อน","🔥"],["ขี้เกียจ","🛌"],
+    ["ตื่นสาย","⏰"],["ติดมือถือ","📱"],["ดองงาน","📚"],["ช้อปเก่ง","🛍️"],["หิวบ่อย","🍟"],
+    ["ขี้บ่น","🗯️"],["เงียบตอนโกรธ","🤐"],["ชอบแกล้ง","😜"],["ขี้หวง","🫣"],["ตัดสินใจช้า","🤔"]
+  ]},
+  {id:"animal", title:"เราชอบสัตว์อะไร?", icon:"🐾", choices:[
+    ["หมา","🐶"],["แมว","🐱"],["กระต่าย","🐰"],["แฮมสเตอร์","🐹"],["คาปิบารา","🦫"],["แพนด้า","🐼"],["จิ้งจอก","🦊"],["นาก","🦦"],["นก","🐦"],["ปลา","🐠"]
+  ]},
+  {id:"freetime", title:"เวลาว่างเราชอบทำอะไร?", icon:"🕹️", choices:[
+    ["นอน","😴"],["ดูหนัง/ซีรีส์","🎬"],["เล่นเกม","🎮"],["ไปคาเฟ่","☕"],["ช้อปปิ้ง","🛍️"],
+    ["เที่ยว","✈️"],["ถ่ายรูป","📸"],["ฟังเพลง","🎧"],["ออกกำลังกาย","🏃"],["อ่านหนังสือ","📖"]
+  ]},
+  {id:"place", title:"สถานที่เที่ยวที่เราชอบ?", icon:"🗺️", choices:[
+    ["ทะเล","🌊"],["ภูเขา","⛰️"],["คาเฟ่","☕"],["เมืองใหญ่","🌆"],["ธรรมชาติ","🌿"],["แคมป์ปิ้ง","⛺"],["สวนสนุก","🎢"],["อยู่บ้านดีที่สุด","🛋️"]
+  ]},
+  {id:"gift", title:"ถ้ามีคนจะซื้อของให้ เราน่าจะชอบอะไร?", icon:"🎁", choices:[
+    ["ของกิน","🍪"],["ดอกไม้","💐"],["ตุ๊กตา","🧸"],["น้ำหอม","🧴"],["หนังสือ","📚"],["แกดเจ็ต","🎧"],["เสื้อผ้า","👕"],["ของแฮนด์เมด","🧶"],["เงินสดเลย","💸"]
+  ]},
+  {id:"music", title:"เพลงแนวไหนที่เราชอบ?", icon:"🎵", choices:[
+    ["T-Pop","🇹🇭"],["K-Pop","🇰🇷"],["J-Pop","🇯🇵"],["Rock","🎸"],["Indie","🌙"],["Hip-Hop","🎤"],["R&B","🎶"],["Lo-fi","🌌"],["ฟังได้หมด","🎧"]
+  ]},
+  {id:"lovelang", title:"วิธีแสดงความรักที่เราชอบที่สุด?", icon:"💞", choices:[
+    ["คำพูดดีๆ","💬"],["ใช้เวลาด้วยกัน","⏳"],["ให้ของขวัญ","🎁"],["ช่วยเหลือดูแล","🫶"],["กอด/สัมผัส","🤗"]
+  ]}
+];
+
+let customQuestions = [];
+let loadedQuiz = null;
+
+function esc(s=""){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1700)}
+function getEmoji(choice){ return choice[1] || "✨" }
+
+function optionHTML(q, choice, mode="creator"){
+  const value = choice[0];
+  const name = (mode==="creator" ? "c_" : "f_")+q.id;
+  const id = name+"_"+Math.random().toString(36).slice(2,9);
+  const swatch = q.type==="color"
+    ? `<span class="swatch" style="background:${choice[2]};${value==="ขาว"?"border:2px solid #ddd":""}"></span>`
+    : `<span class="icon">${esc(getEmoji(choice))}</span>`;
+  return `<div class="opt">
+    <input type="radio" id="${id}" name="${esc(name)}" value="${esc(value)}">
+    <label for="${id}">${swatch}<span>${esc(value)}</span></label>
+  </div>`
+}
+
+function questionHTML(q,i,mode="creator"){
+  return `<div class="q" data-qid="${esc(q.id)}">
+    <div class="qtitle"><span class="qno">${i+1}</span><span>${esc(q.icon||"💡")} ${esc(q.title)}</span></div>
+    <div class="options">${q.choices.map(c=>optionHTML(q,c,mode)).join("")}</div>
+  </div>`
+}
+
+function renderCreator(){
+  document.getElementById("creatorQuestions").innerHTML = QUESTIONS.map((q,i)=>questionHTML(q,i)).join("");
+  restoreDraftSelections();
+}
+
+function addCustomQuestion(title, choiceText, answer=null){
+  const choices = choiceText.split("|").map(s=>s.trim()).filter(Boolean).slice(0,12).map(x=>{
+    const m=x.match(/^(.*?)([\u{1F300}-\u{1FAFF}\u2600-\u27BF]+)$/u);
+    return m ? [m[1].trim(),m[2]] : [x,"✨"];
+  });
+  if(!title.trim() || choices.length<2){toast("ใส่คำถามและตัวเลือกอย่างน้อย 2 ข้อ");return}
+  const q={id:"custom_"+Date.now()+"_"+Math.random().toString(36).slice(2,6),title:title.trim(),icon:"💡",choices,answer};
+  customQuestions.push(q); renderCustomList(); saveDraftData();
+}
+
+function renderCustomList(){
+  const box=document.getElementById("customList");
+  box.innerHTML=customQuestions.map((q,i)=>`
+    <div class="custom-item">
+      <div class="toprow"><b>${i+1}. ${esc(q.title)}</b><button class="btn danger" style="padding:7px 10px" onclick="removeCustom('${q.id}')">ลบ</button></div>
+      <div class="options" style="margin-top:12px">
+        ${q.choices.map(c=>optionHTML(q,c,"creator")).join("")}
+      </div>
+    </div>`).join("");
+  customQuestions.forEach(q=>{
+    if(q.answer){
+      const el=[...document.querySelectorAll(`input[name="c_${CSS.escape(q.id)}"]`)].find(x=>x.value===q.answer);
+      if(el)el.checked=true;
+    }
+  })
+}
+window.removeCustom=function(id){customQuestions=customQuestions.filter(x=>x.id!==id);renderCustomList();saveDraftData()}
+
+function allCreatorQuestions(){ return [...QUESTIONS,...customQuestions] }
+
+function collectCreator(){
+  const ownerName=document.getElementById("ownerName").value.trim();
+  if(!ownerName){toast("ใส่ชื่อของเราก่อนนะ 👤");return null}
+  const answers={};
+  for(const q of allCreatorQuestions()){
+    const el=document.querySelector(`input[name="c_${CSS.escape(q.id)}"]:checked`);
+    if(el) answers[q.id]=el.value;
+  }
+  const selectedCount=Object.keys(answers).length;
+  if(selectedCount<5){toast("เลือกเฉลยอย่างน้อย 5 ข้อก่อนนะ ✨");return null}
+  const customs=customQuestions.map(q=>({...q,answer:answers[q.id]||null}));
+  return {v:1,ownerName,answers,customs,createdAt:Date.now()}
+}
+
+function bytesToBase64Url(bytes){
+  let binary=""; bytes.forEach(b=>binary+=String.fromCharCode(b));
+  return btoa(binary).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function base64UrlToText(s){
+  s=s.replace(/-/g,"+").replace(/_/g,"/");
+  while(s.length%4)s+="=";
+  const bin=atob(s); const bytes=Uint8Array.from(bin,c=>c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+function encodeQuiz(obj){return bytesToBase64Url(new TextEncoder().encode(JSON.stringify(obj)))}
+function decodeQuiz(s){return JSON.parse(base64UrlToText(s))}
+
+function saveDraftData(){
+  const data={ownerName:document.getElementById("ownerName").value||"",customQuestions,answers:{}};
+  document.querySelectorAll('#creator input[type="radio"]:checked').forEach(el=>{
+    data.answers[el.name]=el.value;
+  });
+  localStorage.setItem("bestieQuizDraft",JSON.stringify(data));
+}
+function restoreDraftSelections(){
+  try{
+    const data=JSON.parse(localStorage.getItem("bestieQuizDraft")||"{}");
+    if(data.ownerName)document.getElementById("ownerName").value=data.ownerName;
+    if(Array.isArray(data.customQuestions)) customQuestions=data.customQuestions;
+    renderCustomList();
+    setTimeout(()=>{
+      Object.entries(data.answers||{}).forEach(([name,val])=>{
+        const el=[...document.querySelectorAll(`input[name="${CSS.escape(name)}"]`)].find(x=>x.value===val); if(el)el.checked=true;
+      });
+    },0)
+  }catch{}
+}
+
+function makeShareLink(){
+  const quiz=collectCreator(); if(!quiz)return;
+  saveDraftData();
+  const base=location.href.split("#")[0];
+  const url=base+"#quiz="+encodeQuiz(quiz);
+  document.getElementById("shareUrl").value=url;
+  document.getElementById("shareBox").style.display="block";
+  document.getElementById("shareBox").scrollIntoView({behavior:"smooth",block:"center"});
+}
+
+function setupFriend(quiz){
+  loadedQuiz=quiz;
+  document.getElementById("creator").classList.add("hidden");
+  document.getElementById("friend").classList.remove("hidden");
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("friendTitle").textContent=`รู้ใจ ${quiz.ownerName} แค่ไหน? 😏`;
+  document.getElementById("friendDesc").textContent=`ตอบตามที่คิดว่า “${quiz.ownerName}” จะเลือก อย่าแอบถามเจ้าตัวนะ!`;
+  const custom=(quiz.customs||[]).filter(q=>quiz.answers[q.id]);
+  const qs=[...QUESTIONS.filter(q=>quiz.answers[q.id]),...custom];
+  document.getElementById("friendQuestions").innerHTML=qs.map((q,i)=>questionHTML(q,i,"friend")).join("");
+  const radios=document.querySelectorAll('#friendQuestions input[type=radio]');
+  radios.forEach(r=>r.addEventListener("change",()=>{
+    const answered=new Set([...document.querySelectorAll('#friendQuestions input[type=radio]:checked')].map(x=>x.name)).size;
+    document.getElementById("quizBar").style.width=(answered/qs.length*100)+"%";
+  }));
+}
+
+function submitQuiz(){
+  const name=document.getElementById("playerName").value.trim();
+  if(!name){toast("ใส่ชื่อก่อนส่งคำตอบนะ 😊");return}
+  const custom=(loadedQuiz.customs||[]).filter(q=>loadedQuiz.answers[q.id]);
+  const qs=[...QUESTIONS.filter(q=>loadedQuiz.answers[q.id]),...custom];
+  const picked={};
+  for(const q of qs){
+    const el=document.querySelector(`input[name="f_${CSS.escape(q.id)}"]:checked`);
+    if(el)picked[q.id]=el.value;
+  }
+  if(Object.keys(picked).length<qs.length){toast(`ยังตอบไม่ครบ เหลือ ${qs.length-Object.keys(picked).length} ข้อ`);return}
+  let score=0;
+  const review=qs.map(q=>{
+    const ok=picked[q.id]===loadedQuiz.answers[q.id]; if(ok)score++;
+    return {title:q.title,picked:picked[q.id],correct:loadedQuiz.answers[q.id],ok};
+  });
+  showResult(name,score,qs.length,review);
+}
+
+function showResult(name,score,total,review){
+  const pct=Math.round(score/total*100);
+  document.getElementById("friend").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+  document.getElementById("resultTitle").textContent=`${name} รู้ใจ ${loadedQuiz.ownerName} แค่ไหน?`;
+  document.getElementById("scorePct").textContent=pct+"%";
+  document.getElementById("scoreRaw").textContent=`${score}/${total} ข้อ`;
+  document.getElementById("scoreCircle").style.setProperty("--p",pct+"%");
+  let lvl,txt,emo;
+  if(pct>=90){lvl="💞 Soul Bestie! รู้ใจเกินไปแล้ว";txt="ระดับนี้ไม่ต้องถามแล้ว แค่มองหน้าก็รู้กัน 😂";emo="👯"}
+  else if(pct>=75){lvl="🔥 เพื่อนสนิทตัวจริง";txt="รู้ใจมากกก ผิดนิดเดียวให้อภัยได้";emo="🥳"}
+  else if(pct>=55){lvl="💗 รู้ใจกันพอตัว";txt="โอเค ผ่าน! แต่ยังมีเรื่องให้เมาท์กันอีกเยอะ";emo="😎"}
+  else if(pct>=30){lvl="🤭 รู้บ้าง เดาบ้าง";txt="นัดคุยกันเพิ่มด่วน มีข้อมูลหลุดหลายข้อ!";emo="😂"}
+  else{lvl="🚨 เราเป็นเพื่อนกันจริงปะเนี่ย";txt="ต้องนัดกินข้าวแล้วอัปเดตข้อมูลกันใหม่ทั้งระบบ 🤣";emo="🙃"}
+  document.getElementById("levelText").textContent=lvl;
+  document.getElementById("resultText").textContent=txt;
+  document.getElementById("resultEmoji").textContent=emo;
+  document.getElementById("answerReview").innerHTML=review.map((r,i)=>`
+    <div class="answerrow">
+      <b>${i+1}. ${esc(r.title)}</b><br>
+      <span class="${r.ok?"correct":"wrong"}">${r.ok?"✓ ถูก!":"✗ ยังไม่ใช่"}</span>
+      <span class="muted"> • คุณตอบ: ${esc(r.picked)} • เฉลย: ${esc(r.correct)}</span>
+    </div>`).join("");
+  localStorage.setItem("bestieQuizLastResult",JSON.stringify({name,owner:loadedQuiz.ownerName,score,total,pct,time:Date.now()}));
+  document.getElementById("shareResult").dataset.msg=`${name} ทำ Bestie Quiz ของ ${loadedQuiz.ownerName} ได้ ${score}/${total} (${pct}%) 💖 ${lvl}`;
+  if(pct>=75) confetti();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function confetti(){
+  const items=["💖","✨","🎉","💗","⭐","🥳"];
+  for(let i=0;i<34;i++){
+    const s=document.createElement("div");s.className="spark";s.textContent=items[Math.floor(Math.random()*items.length)];
+    s.style.left=Math.random()*100+"vw";s.style.animationDelay=Math.random()*.6+"s";s.style.fontSize=(16+Math.random()*18)+"px";
+    document.body.appendChild(s);setTimeout(()=>s.remove(),2600);
+  }
+}
+async function shareText(text,title="Bestie Quiz"){
+  if(navigator.share){try{await navigator.share({title,text});return}catch{}}
+  await navigator.clipboard.writeText(text);toast("คัดลอกแล้ว 📋");
+}
+
+document.getElementById("addCustom").onclick=()=>{
+  addCustomQuestion(document.getElementById("customTitle").value,document.getElementById("customChoices").value);
+  document.getElementById("customTitle").value="";document.getElementById("customChoices").value="";
+}
+document.getElementById("makeLink").onclick=makeShareLink;
+document.getElementById("saveDraft").onclick=()=>{saveDraftData();toast("บันทึกไว้ในเครื่องแล้ว 💾")}
+document.getElementById("copyLink").onclick=async()=>{await navigator.clipboard.writeText(document.getElementById("shareUrl").value);toast("คัดลอกลิงก์แล้ว 🔗")}
+document.getElementById("nativeShare").onclick=()=>shareText(document.getElementById("shareUrl").value,"รู้ใจเราแค่ไหน?");
+document.getElementById("resetAll").onclick=()=>{
+  if(confirm("ล้างคำตอบและคำถามที่เพิ่มทั้งหมด?")){localStorage.removeItem("bestieQuizDraft");location.href=location.href.split("#")[0]}
+}
+document.getElementById("submitQuiz").onclick=submitQuiz;
+document.getElementById("shareResult").onclick=e=>shareText(e.currentTarget.dataset.msg||"");
+document.getElementById("retryQuiz").onclick=()=>{setupFriend(loadedQuiz);window.scrollTo({top:0,behavior:"smooth"})}
+document.getElementById("ownerName").addEventListener("input",()=>{clearTimeout(window._sv);window._sv=setTimeout(saveDraftData,400)})
+document.addEventListener("change",e=>{if(e.target.closest("#creator")){clearTimeout(window._sv2);window._sv2=setTimeout(saveDraftData,250)}})
+
+renderCreator();
+
+try{
+  if(location.hash.startsWith("#quiz=")){
+    const quiz=decodeQuiz(location.hash.slice(6));
+    if(quiz && quiz.ownerName && quiz.answers) setupFriend(quiz);
+  }
+}catch(err){console.error(err);toast("ลิงก์แบบทดสอบไม่สมบูรณ์")}
+</script>
+</body>
+</html>
